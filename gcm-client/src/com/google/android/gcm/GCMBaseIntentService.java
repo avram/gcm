@@ -248,7 +248,11 @@ public abstract class GCMBaseIntentService extends IntentService {
             synchronized (LOCK) {
                 // sanity check for null as this is a public method
                 if (sWakeLock != null) {
-                    sWakeLock.release();
+                    try {
+                        sWakeLock.release();
+                    } catch (Throwable throwable) {
+                        // ignoring per http://stackoverflow.com/questions/12140844/
+                    }
                 } else {
                     // should never happen during normal workflow
                     Log.e(TAG, "Wakelock reference is null");
